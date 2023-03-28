@@ -5,6 +5,8 @@ fn main() {
     if !check_device() {
         if !launch_device() {
             std::process::exit(1);
+        } else {
+            println!("Success");
         }
     }
 
@@ -28,10 +30,12 @@ fn launch_device() -> bool {
     let emulator_output = String::from_utf8_lossy(&emulator.stdout).to_string();
 
     if emulator_output.is_empty() {
-        println!("An AVD image must be created first.\n");
+        println!("An AVD image must be created first.\n"); // TODO: enable dynamic creation of avds.
         false
     } else {
-        Command::new("emulator").arg("-avd").arg(emulator_output);
+        let avd_name = format!("@{}",emulator_output.trim());
+        println!("{}",avd_name);
+        let _launch = Command::new("emulator").arg(avd_name).spawn().unwrap();
         true
     }
 }
