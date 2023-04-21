@@ -86,11 +86,12 @@ fn install_apk() {
         handle_install.join().unwrap();
         start_apk_execution(apk_path);
     }
+    Command::new("adb").arg("emu").arg("kill").spawn().unwrap();
 }
 
 fn start_apk_execution(apk_path: String) {
-    add_files();
+    // Uncomment this line to test ransomware:
+    //add_files();
     let _py_call = Command::new("python").arg("src/avd_interaction.py").arg(apk_path)
             .stdout(Stdio::piped()).output();
-    Command::new("adb").arg("pull").arg("/data/app/logs.txt").spawn().unwrap();
 }

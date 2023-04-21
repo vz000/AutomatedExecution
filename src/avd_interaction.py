@@ -21,11 +21,14 @@ try:
     first_line = get_line.readlines()[0] # processing that doesn't fit rust.
     process_output = first_line.split(' ')
     pid = [x for x in process_output if x != '']
-    ex_strace = Thread(target=start_strace, args=(pid[1], '/data/app/logs.txt'))
+    file_name = '/data/app/logs-' + str(pkg_name)+ '.txt'
+    ex_strace = Thread(target=start_strace, args=(pid[1], file_name))
     ex_strace.start()
     print("Waiting for strace to finish...")
     ex_strace.join()
+    os.system("adb pull " + file_name)
+
 except Exception as e:
     print("Deleting APK...")
-    os.remove(apkLocation)
+    #os.remove(apkLocation)
     print(e)
